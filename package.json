@@ -1,0 +1,20 @@
+{
+  "name": "protect-api",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node dist/index.js"
+  },
+  "author": {
+    "name": "Clément Champouillon",
+    "email": "clement@champouillon.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.9.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "firebase-admin": "^11.3.0"
+  }
+}
