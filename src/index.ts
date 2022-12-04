@@ -1,21 +1,21 @@
-import { initializeApp } from 'firebase-admin/app';
-import { credential } from 'firebase-admin';
-import {messaging} from "firebase-admin";
-import { getMessaging } from "firebase-admin/messaging";
+import logger from './utils/logger';
+import Firebase from './services/Firebase';
+import * as express from 'express';
+import * as cors from 'cors';
 
-const app = initializeApp({
-  credential: credential.cert('./firebase-key.json'),
-}, 'alert');
+logger.info('Server started');
 
-const TOKEN = 'fXJwZUWtRBaPke9_Q3h8Ac:APA91bEy_fh7WcpZnhEQgW0C-b2cxXshiZEoB8Qr7CDYciCYRzhFwfzMBRqy613h4wZrDPffRr3E0CU2KY5Xx71c-KOWOQg_kZMeQCavuhKbU4z6nb94mnbPuG-q1I0QyZI2USJuQVbp';
+const app = express();
 
-getMessaging(app).sendToDevice(TOKEN, {
-  notification: {
-    title: 'Déclenchement PC',
-    body: 'Ceci est un test système',
-  }
-}).then((response) => {
-  console.log(response);
-}).catch((error) => {
-  console.log(error);
+app.use(cors());
+
+app.post('/api/notify', (req, res) => {
+  Firebase.sendNotification();
+  res.send({ message: 'Notification sent' });
+});
+
+const PORT = 3000;
+
+app.listen(PORT, () => {
+  logger.info('Server listening on port ' + PORT);
 });
