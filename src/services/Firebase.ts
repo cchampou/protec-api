@@ -6,11 +6,10 @@ import {
 import { credential } from 'firebase-admin';
 import logger from '../utils/logger';
 import { logMessagingDevicesResponse } from '../utils/firebase';
+import Database from './Database';
 
 class Firebase {
   private static _appInstance: App;
-  private static TOKEN =
-    'eWNzaNg_T2qa_rxAhzYb6A:APA91bEseUUXt78wBMonJg2AlTE4uvonR7gWgUrNbw_AmQmQBxCrSQ5KHlTxiNK35CDhunH6oJ_bcye5UIdBuROrudRjb5y0gE3UxTiqdbRWJd2p_1uydpSFCl4QFXa6P1THHUdvWJ-7';
 
   private static get app() {
     if (!Firebase._appInstance) {
@@ -27,9 +26,9 @@ class Firebase {
     return Firebase._appInstance;
   }
 
-  public static sendNotification() {
+  public static sendNotification(token: string) {
     getMessaging(Firebase.app)
-      .sendToDevice(Firebase.TOKEN, {
+      .sendToDevice(token, {
         notification: {
           title: 'Déclenchement PC',
           body: 'Ceci est un test système',
@@ -40,11 +39,11 @@ class Firebase {
           title: 'Manifestation',
           comment:
             'Une manifestion est prévue samedi prochain, les autorités requièrent notre présence.',
-          startDate: '2019-10-10',
+          startDate: '10/12/2022',
           startTime: '10:00',
-          endDate: '2019-10-10',
+          endDate: '10/12/2022',
           endTime: '11:00',
-          eProtecLink: 'https://www.eprotec.fr',
+          eProtecLink: 'https://franceprotectioncivile.org/index.php',
           location: 'Place Bellecour, Lyon',
         },
       })
