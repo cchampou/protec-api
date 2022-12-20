@@ -1,42 +1,25 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  ObjectID,
-  ObjectIdColumn,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import mongoose, { Schema } from 'mongoose';
 
-@Entity()
-export default class User {
-  @ObjectIdColumn()
-  id: ObjectID;
+const userSchema = new Schema({
+  lastName: { type: String, required: true },
+  firstName: { type: String, required: true },
+  email: { type: String, unique: true, required: true },
+  phone: { type: String, unique: true, required: true },
+  hash: { type: String, select: false, required: false },
+  deviceId: String,
+  registrationToken: { type: String, required: true },
+});
 
-  @Column()
+export interface UserInterface {
   lastName: string;
-
-  @Column()
   firstName: string;
-
-  @Column({ unique: true })
   email: string;
-
-  @Column({ unique: true })
   phone: string;
-
-  @Column()
   hash: string;
-
-  @Column()
   deviceId: string;
-
-  @Column()
   registrationToken: string;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }
+
+const User = mongoose.model<UserInterface>('User', userSchema);
+
+export default User;
