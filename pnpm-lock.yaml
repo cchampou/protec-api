@@ -9,6 +9,7 @@ specifiers:
   '@types/node': ^18.11.10
   body-parser: ^1.20.1
   cors: ^2.8.5
+  csv-parse: ^5.3.3
   dotenv: ^16.0.3
   eslint: ^8.29.0
   express: ^4.18.2
@@ -23,6 +24,7 @@ specifiers:
 dependencies:
   body-parser: 1.20.1
   cors: 2.8.5
+  csv-parse: 5.3.3
   dotenv: 16.0.3
   express: 4.18.2
   firebase-admin: 11.3.0_@firebase+app-types@0.8.1
@@ -1589,6 +1591,10 @@ packages:
       shebang-command: 2.0.0
       which: 2.0.2
     dev: true
+
+  /csv-parse/5.3.3:
+    resolution: {integrity: sha512-kEWkAPleNEdhFNkHQpFHu9RYPogsFj3dx6bCxL847fsiLgidzWg0z/O0B1kVWMJUc5ky64zGp18LX2T3DQrOfw==}
+    dev: false
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}

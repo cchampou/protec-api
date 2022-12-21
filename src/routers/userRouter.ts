@@ -1,6 +1,8 @@
 import { Router } from 'express';
-import User from '../entities/User';
+import User, { UserInterface } from '../entities/User';
 import * as multer from 'multer';
+import * as fs from 'fs';
+import { parse } from 'csv-parse/sync';
 
 const upload = multer({ dest: 'uploads/users' });
 
@@ -13,7 +15,25 @@ userRouter.get('/', async (req, res) => {
 });
 
 userRouter.post('/import', upload.single('csv'), async (req, res) => {
-  res.send({ message: 'Imported' });
+  if (!req.file) {
+    return res.status(400).send({ message: 'No file uploaded' });
+  }
+  try {
+    const csvContent = fs.readFileSync(req.file.path, 'utf8');
+    const parsed = parse(csvContent, { columns: true });
+    await Promise.all(
+      parsed.map(async (user: Partial<UserInterface>) => {
+        return User.create(user);
+      }),
+    );
+    res.send({ message: 'Imported' });
+  } catch (error) {
+    res
+      .status(400)
+      .send({
+        message: "Erreur lors de l'import, cela peut-être dû à des doublons",
+      });
+  }
 });
 
 userRouter.get('/:id', async (req, res) => {

@@ -7,7 +7,11 @@ const userSchema = new Schema({
   phone: { type: String, unique: true, required: true },
   hash: { type: String, select: false, required: false },
   deviceId: String,
-  registrationToken: { type: String, required: true },
+  registrationToken: {
+    type: String,
+    required: true,
+    default: Math.floor(100000 + Math.random() * 900000),
+  },
 });
 
 export interface UserInterface {
