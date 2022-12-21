@@ -12,12 +12,4 @@ apiRouter.use('/user', userRouter);
 apiRouter.use('/device', deviceRouter);
 apiRouter.use('/event', eventRouter);
 
-apiRouter.post('/notify', async (req, res) => {
-  const users: UserInterface[] = await User.find();
-  users.map((user) => {
-    Firebase.sendNotification(user.deviceId);
-  });
-  res.send({ message: 'Notification sent' });
-});
-
 export default apiRouter;
