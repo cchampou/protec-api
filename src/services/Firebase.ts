@@ -26,9 +26,11 @@ class Firebase {
     return Firebase._appInstance;
   }
 
-  public static sendNotification(token: string) {
-    getMessaging(Firebase.app)
-      .sendToDevice(token, {
+  public static async sendNotification(token: string, eventId: string) {
+    try {
+      const response: MessagingDevicesResponse = await getMessaging(
+        Firebase.app,
+      ).sendToDevice(token, {
         notification: {
           title: 'Déclenchement PC',
           body: 'Ceci est un test système',
@@ -36,6 +38,7 @@ class Firebase {
         },
         data: {
           type: 'alert',
+          eventId,
           title: 'Manifestation',
           comment:
             'Une manifestion est prévue samedi prochain, les autorités requièrent notre présence.',
@@ -46,13 +49,12 @@ class Firebase {
           eProtecLink: 'https://franceprotectioncivile.org/index.php',
           location: 'Place Bellecour, Lyon',
         },
-      })
-      .then((response: MessagingDevicesResponse) => {
-        logMessagingDevicesResponse(response);
-      })
-      .catch((error) => {
-        logger.error(error);
       });
+      logMessagingDevicesResponse(response);
+    } catch (error) {
+      logger.error(error.code);
+      logger.error(error.message);
+    }
   }
 }
 

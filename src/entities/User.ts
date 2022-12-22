@@ -1,6 +1,17 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { ObjectId, Schema } from 'mongoose';
 
-const userSchema = new Schema({
+export interface UserInterface {
+  _id: ObjectId;
+  lastName: string;
+  firstName: string;
+  email: string;
+  phone: string;
+  hash: string;
+  deviceId: string;
+  registrationToken: string;
+}
+
+const userSchema = new Schema<UserInterface>({
   lastName: { type: String, required: true },
   firstName: { type: String, required: true },
   email: { type: String, unique: true, required: true },
@@ -10,19 +21,9 @@ const userSchema = new Schema({
   registrationToken: {
     type: String,
     required: true,
-    default: Math.floor(100000 + Math.random() * 900000),
+    default: () => Math.floor(100000 + Math.random() * 900000).toString(),
   },
 });
-
-export interface UserInterface {
-  lastName: string;
-  firstName: string;
-  email: string;
-  phone: string;
-  hash: string;
-  deviceId: string;
-  registrationToken: string;
-}
 
 const User = mongoose.model<UserInterface>('User', userSchema);
 

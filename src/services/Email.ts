@@ -19,12 +19,12 @@ class Email {
     }
   }
 
-  public static async sendEmail(toEmail: string) {
+  public static async sendEmail(toEmail: string, html: string) {
     await this.init();
     await this.instance.sendMail({
       to: toEmail,
-      text: 'Hello world',
-      subject: 'Hello world',
+      html,
+      subject: 'ProtecApp',
       from: '"ADPC69" <no-reply@champouillon.com>',
     });
     logger.info('Email sent');

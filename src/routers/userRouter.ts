@@ -3,6 +3,8 @@ import User, { UserInterface } from '../entities/User';
 import * as multer from 'multer';
 import * as fs from 'fs';
 import { parse } from 'csv-parse/sync';
+import Email from '../services/Email';
+import logger from '../utils/logger';
 
 const upload = multer({ dest: 'uploads/users' });
 
@@ -12,6 +14,24 @@ userRouter.get('/', async (req, res) => {
   const users = await User.find();
 
   res.send(users);
+});
+
+userRouter.post('/:id/invite', async (req, res) => {
+  const user = await User.findOne({ _id: req.params.id });
+
+  if (!user) {
+    return res.status(404).send('User not found');
+  }
+
+  await Email.sendEmail(
+    user.email,
+    `
+<a href='https://drive.google.com/drive/folders/1QerHw_pUTuIClsLQBLjYbA3Z5tGxNoGv'>Télécharger l'app</a><br/>
+${user.registrationToken}
+`,
+  );
+
+  res.send(user);
 });
 
 userRouter.post('/import', upload.single('csv'), async (req, res) => {
@@ -28,11 +48,10 @@ userRouter.post('/import', upload.single('csv'), async (req, res) => {
     );
     res.send({ message: 'Imported' });
   } catch (error) {
-    res
-      .status(400)
-      .send({
-        message: "Erreur lors de l'import, cela peut-être dû à des doublons",
-      });
+    logger.error(error);
+    res.status(400).send({
+      message: "Erreur lors de l'import, cela peut-être dû à des doublons",
+    });
   }
 });
 

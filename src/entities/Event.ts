@@ -1,12 +1,15 @@
-import mongoose, { Schema } from 'mongoose';
+import { HydratedDocument, model, ObjectId, Schema } from 'mongoose';
+import { NotificationInterface, notificationSchema } from './Notification';
 
 export interface EventInterface {
+  _id: ObjectId;
   title: string;
   eProtecLink: string;
   comment?: string;
   location: string;
   start: Date;
   end: Date;
+  notifications: HydratedDocument<NotificationInterface>[];
 }
 
 const eventSchema = new Schema<EventInterface>({
@@ -16,8 +19,9 @@ const eventSchema = new Schema<EventInterface>({
   location: { type: String, required: true },
   start: { type: Date, required: true },
   end: { type: Date, required: true },
+  notifications: [notificationSchema],
 });
 
-const Event = mongoose.model<EventInterface>('Event', eventSchema);
+const Event = model<EventInterface>('Event', eventSchema);
 
 export default Event;
