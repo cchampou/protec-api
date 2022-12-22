@@ -19,10 +19,10 @@ class Email {
     }
   }
 
-  public static async sendEmail(user: UserInterface) {
+  public static async sendEmail(toEmail: string) {
     await this.init();
     await this.instance.sendMail({
-      to: user.email,
+      to: toEmail,
       text: 'Hello world',
       subject: 'Hello world',
       from: '"ADPC69" <no-reply@champouillon.com>',

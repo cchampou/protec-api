@@ -21,9 +21,9 @@ class Notifier {
       case 'push':
         return Firebase.sendNotification(user.deviceId);
       case 'email':
-        return Email.sendEmail(user);
+        return Email.sendEmail(user.email);
       default:
-        return Email.sendEmail(user);
+        return Email.sendEmail(user.email);
     }
   }
 }
