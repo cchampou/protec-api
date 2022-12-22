@@ -2,11 +2,9 @@ import mongoose from 'mongoose';
 
 class Database {
   public static async connect() {
+    if (!process.env.DB_URL) throw new Error('DB_URL is not defined');
     mongoose.set('strictQuery', true);
-    return mongoose.connect(
-      'mongodb+srv://admin:b8gt5k98c@main.cchssw7.mongodb.net/dev?retryWrites=true&w=majority',
-      {},
-    );
+    return mongoose.connect(process.env.DB_URL, {});
   }
 }
 
