@@ -10,7 +10,7 @@ import { HydratedDocument } from 'mongoose';
 const eventRouter = Router();
 
 eventRouter.get('/', async (req, res) => {
-  const events = await Event.find();
+  const events = await Event.find().sort({ start: -1 });
 
   res.send(events);
 });
@@ -41,22 +41,27 @@ eventRouter.post('/:id/answer', async (req, res) => {
   const eventId = req.params.id;
   const deviceId = req.body.deviceId;
   const availability = req.body.availability;
-  console.log('deviceId', deviceId);
-  console.log('availability', availability);
-  console.log('eventId', eventId);
   const event = await Event.findOne({ _id: eventId }).populate(
     'notifications.user',
   );
   if (!event) {
     return res.status(404).send({ message: 'Not found' });
   }
-  const notificationDocument = event.notifications.find(
+  let notificationDocument = event.notifications.find(
     (notification) =>
       (notification.user as UserInterface).deviceId === deviceId,
   );
-  console.log('notificationDocument', notificationDocument);
   if (!notificationDocument) {
-    return res.status(404).send({ message: 'Not found' });
+    const user = await User.findOne({ deviceId });
+    if (!user) return res.status(404).send({ message: 'Not found' });
+    notificationDocument = new Notification({
+      user,
+      available:
+        availability === 'true'
+          ? NotificationAvailability.ACCEPTED
+          : NotificationAvailability.REFUSED,
+    });
+    event.notifications.push(notificationDocument);
   }
   notificationDocument.available =
     availability === 'true'

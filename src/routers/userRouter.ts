@@ -26,7 +26,7 @@ userRouter.post('/:id/invite', async (req, res) => {
   await Email.sendEmail(
     user.email,
     `
-<a href='https://drive.google.com/drive/folders/1QerHw_pUTuIClsLQBLjYbA3Z5tGxNoGv'>Télécharger l'app</a><br/>
+<a href='https://play.google.com/apps/internaltest/4701694566417020121'>Télécharger l'app</a><br/>
 ${user.registrationToken}
 `,
   );

@@ -1,3 +1,9 @@
+import { config } from 'dotenv';
+
+config({
+  path: '.env.dev',
+});
+
 import logger from './utils/logger';
 import * as express from 'express';
 import * as cors from 'cors';
@@ -6,9 +12,6 @@ import 'reflect-metadata';
 import Database from './services/Database';
 import * as bodyParser from 'body-parser';
 import apiRouter from './routers';
-import { config } from 'dotenv';
-
-config();
 
 const app = express();
 

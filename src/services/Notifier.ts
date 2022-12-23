@@ -2,6 +2,8 @@ import Firebase from './Firebase';
 import { UserInterface } from '../entities/User';
 import Email from './Email';
 import { EventInterface } from '../entities/Event';
+import Sms from './Sms';
+import Phone from './Phone';
 
 export type NotifierMode = 'email' | 'sms' | 'push' | 'phone';
 
@@ -24,9 +26,9 @@ class Notifier {
       case 'email':
         return Email.sendEmail(user.email, 'Déclenchement');
       case 'phone':
-        return console.log('Phone notification');
+        return Phone.call(user.phone);
       case 'sms':
-        return console.log('SMS notification');
+        return Sms.sendSms(user.phone, 'Déclenchement');
       default:
         return Email.sendEmail(user.email, 'Déclenchement');
     }
