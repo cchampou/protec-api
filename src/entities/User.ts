@@ -10,6 +10,7 @@ export interface UserInterface {
   hash: string;
   salt: string;
   recoveryToken: string;
+  role: string;
   deviceId: string;
   registrationToken: string;
 }
@@ -27,6 +28,7 @@ const userSchema = new Schema<UserInterface, {}, UserMethods>({
   phone: { type: String, unique: true, required: true },
   hash: { type: String, select: false, required: false },
   salt: { type: String, select: false, required: false },
+  role: { type: String, required: true, default: 'user' },
   recoveryToken: { type: String, select: false, required: false },
   deviceId: String,
   registrationToken: {

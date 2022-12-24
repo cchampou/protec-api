@@ -5,6 +5,7 @@ specifiers:
   '@types/body-parser': ^1.19.2
   '@types/cors': ^2.8.12
   '@types/express': ^4.17.14
+  '@types/jsonwebtoken': ^9.0.0
   '@types/multer': ^1.4.7
   '@types/node': ^18.11.10
   '@types/nodemailer': ^6.4.7
@@ -45,6 +46,7 @@ devDependencies:
   '@types/body-parser': 1.19.2
   '@types/cors': 2.8.12
   '@types/express': 4.17.14
+  '@types/jsonwebtoken': 9.0.0
   '@types/multer': 1.4.7
   '@types/node': 18.11.10
   '@types/nodemailer': 6.4.7
@@ -1228,6 +1230,12 @@ packages:
     dependencies:
       '@types/node': 18.11.10
     dev: false
+
+  /@types/jsonwebtoken/9.0.0:
+    resolution: {integrity: sha512-mM4TkDpA9oixqg1Fv2vVpOFyIVLJjm5x4k0V+K/rEsizfjD7Tk7LKk3GTtbB7KCfP0FEHQtsZqFxYA0+sijNVg==}
+    dependencies:
+      '@types/node': 18.11.10
+    dev: true
 
   /@types/linkify-it/3.0.2:
     resolution: {integrity: sha512-HZQYqbiFVWufzCwexrvh694SOim8z2d+xJl5UNamcvQFejLY/2YUtzXHYi3cHdI7PMlS8ejH2slRAOJQ32aNbA==}

@@ -6,6 +6,7 @@ import Notification, {
   NotificationAvailability,
 } from '../entities/Notification';
 import { HydratedDocument } from 'mongoose';
+import isAuthenticated from '../middlewares/auth';
 
 const eventRouter = Router();
 
@@ -15,7 +16,7 @@ eventRouter.get('/', async (req, res) => {
   res.send(events);
 });
 
-eventRouter.get('/:id', async (req, res) => {
+eventRouter.get('/:id', isAuthenticated, async (req, res) => {
   try {
     const event = await Event.findOne({
       _id: req.params.id,
@@ -28,7 +29,7 @@ eventRouter.get('/:id', async (req, res) => {
   }
 });
 
-eventRouter.post('/', async (req, res) => {
+eventRouter.post('/', isAuthenticated, async (req, res) => {
   try {
     const event = await Event.create(req.body);
     res.send(event);

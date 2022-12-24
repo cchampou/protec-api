@@ -16,51 +16,6 @@ userRouter.get('/', async (req, res) => {
   res.send(users);
 });
 
-userRouter.post('/recover', async (req, res) => {
-  const { email } = req.body;
-  logger.info('Recovering password for', email);
-  const user = await User.findOne({
-    email,
-  });
-  if (user) {
-    logger.debug('user found');
-    user.generateRecoveryToken();
-    await user.save();
-    await Email.sendEmail(email, user.recoveryToken);
-  } else {
-    logger.debug('user not found');
-  }
-  res.send({ message: 'ok' });
-});
-
-userRouter.post('/reset', async (req, res) => {
-  const { token, password } = req.body;
-  logger.info('Resetting password for', token);
-  const user = await User.findOne({
-    recoveryToken: token,
-  });
-  if (user) {
-    logger.debug('user found');
-    user.generateHashAndSalt(password);
-    await user.save();
-  } else {
-    return res.status(404).send({ message: 'Not found' });
-  }
-  return res.send({ message: 'ok' });
-});
-
-userRouter.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password)
-    return res.status(400).send({ message: 'Bad request' });
-  const user = await User.findOne({
-    email,
-  }).select('+hash +salt');
-  if (!user || !user.validPassword(password))
-    return res.status(401).send({ message: 'Unauthorized' });
-  return res.status(200).send({ token: '1234567890' });
-});
-
 userRouter.post('/:id/invite', async (req, res) => {
   const user = await User.findOne({ _id: req.params.id });
 

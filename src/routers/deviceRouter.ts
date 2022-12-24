@@ -1,12 +1,11 @@
 import logger from '../utils/logger';
-import Database from '../services/Database';
 import User from '../entities/User';
 import { Router } from 'express';
 
 const deviceRouter = Router();
 
 deviceRouter.get('/check/:deviceId', async (req, res) => {
-  const deviceId = req.params.deviceId;
+  const { deviceId } = req.params;
   const user = await User.findOne({ deviceId: deviceId });
   if (user) {
     return res.send({ message: 'Device found' });
@@ -15,9 +14,7 @@ deviceRouter.get('/check/:deviceId', async (req, res) => {
 });
 
 deviceRouter.post('/register', async (req, res) => {
-  // TODO: Validate request
-  const registrationToken = req.body.registrationToken;
-  const deviceId = req.body.deviceId;
+  const { registrationToken, deviceId } = req.body;
   logger.debug(
     `Registering user with token: ${registrationToken} and device id: ${deviceId}`,
   );
