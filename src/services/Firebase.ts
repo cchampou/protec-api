@@ -39,15 +39,6 @@ class Firebase {
         data: {
           type: 'alert',
           eventId,
-          title: 'Manifestation',
-          comment:
-            'Une manifestion est prévue samedi prochain, les autorités requièrent notre présence.',
-          startDate: '10/12/2022',
-          startTime: '10:00',
-          endDate: '10/12/2022',
-          endTime: '11:00',
-          eProtecLink: 'https://franceprotectioncivile.org/index.php',
-          location: 'Place Bellecour, Lyon',
         },
       });
       logMessagingDevicesResponse(response);
