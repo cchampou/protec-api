@@ -1,0 +1,9 @@
+<%- include('header', {title: 'Bienvenue' }) %>
+<p>
+    Vous recevez cet email car vous êtes invité à utiliser l'application ProtecAPP.
+</p>
+<a href="<%= downloadLink %>">Télécharger l'application</a>
+<p>
+    Votre code d'activation est : <b><%= registrationCode %></b>
+</p>
+<%- include('footer') %>

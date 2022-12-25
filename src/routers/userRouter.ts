@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import User, { UserInterface } from '../entities/User';
 import * as multer from 'multer';
-import * as fs from 'fs';
 import { parse } from 'csv-parse/sync';
 import Email from '../services/Email';
 import logger from '../utils/logger';
+import { render } from 'ejs';
+import { readFileSync } from 'fs';
 
 const upload = multer({ dest: 'uploads/users' });
 
@@ -25,10 +26,11 @@ userRouter.post('/:id/invite', async (req, res) => {
 
   await Email.sendEmail(
     user.email,
-    `
-<a href='https://play.google.com/apps/internaltest/4701694566417020121'>Télécharger l'app</a><br/>
-${user.registrationToken}
-`,
+    render(readFileSync('src/views/emails/invite.ejs', 'utf8'), {
+      downloadLink:
+        'https://play.google.com/apps/internaltest/4701694566417020121',
+      registrationCode: user.registrationToken,
+    }),
   );
 
   res.send(user);
@@ -39,7 +41,7 @@ userRouter.post('/import', upload.single('csv'), async (req, res) => {
     return res.status(400).send({ message: 'No file uploaded' });
   }
   try {
-    const csvContent = fs.readFileSync(req.file.path, 'utf8');
+    const csvContent = readFileSync(req.file.path, 'utf8');
     const parsed = parse(csvContent, { columns: true });
     await Promise.all(
       parsed.map(async (user: Partial<UserInterface>) => {

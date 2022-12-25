@@ -3,8 +3,14 @@ import User from '../entities/User';
 import Email from '../services/Email';
 import { sign } from 'jsonwebtoken';
 import { Router } from 'express';
+import { readFileSync } from 'fs';
+import { render } from 'ejs';
 
 const authRouter = Router();
+
+if (!process.env.BASE_URL) {
+  logger.error('BASE_URL is not defined');
+}
 
 authRouter.post('/recover', async (req, res) => {
   const { email } = req.body;
@@ -16,7 +22,16 @@ authRouter.post('/recover', async (req, res) => {
     logger.debug('user found');
     user.generateRecoveryToken();
     await user.save();
-    await Email.sendEmail(email, user.recoveryToken);
+    const templatePath = 'src/views/emails/reset.ejs';
+    const template = readFileSync(templatePath, 'utf8');
+
+    await Email.sendEmail(
+      email,
+      render(template, {
+        filename: templatePath,
+        url: `${process.env.BASE_URL}/password/${user.recoveryToken}`,
+      }),
+    );
   } else {
     logger.debug('user not found');
   }

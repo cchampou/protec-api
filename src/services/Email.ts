@@ -25,7 +25,7 @@ class Email {
       to: toEmail,
       html,
       subject: 'ProtecApp',
-      from: '"ADPC69" <no-reply@champouillon.com>',
+      from: '"ADPC69" <clement@champouillon.com>',
     });
     logger.info('Email sent');
   }
