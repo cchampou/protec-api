@@ -45,7 +45,12 @@ userRouter.post('/import', upload.single('csv'), async (req, res) => {
     const parsed = parse(csvContent, { columns: true });
     await Promise.all(
       parsed.map(async (user: Partial<UserInterface>) => {
-        return User.create(user);
+        try {
+          await User.create(user);
+        } catch (e) {
+          logger.error(e);
+        }
+        return;
       }),
     );
     res.send({ message: 'Imported' });

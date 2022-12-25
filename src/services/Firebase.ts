@@ -26,14 +26,18 @@ class Firebase {
     return Firebase._appInstance;
   }
 
-  public static async sendNotification(token: string, eventId: string) {
+  public static async sendNotification(
+    token: string,
+    eventId: string,
+    eventName: string,
+  ) {
     try {
       const response: MessagingDevicesResponse = await getMessaging(
         Firebase.app,
       ).sendToDevice(token, {
         notification: {
-          title: 'Déclenchement PC',
-          body: 'Ceci est un test système',
+          title: 'Déclenchement PC (test)',
+          body: eventName,
           priority: 'high',
         },
         data: {

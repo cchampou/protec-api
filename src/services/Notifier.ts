@@ -22,7 +22,11 @@ class Notifier {
   public notify(user: UserInterface, event: EventInterface) {
     switch (this.config.mode) {
       case 'push':
-        return Firebase.sendNotification(user.deviceId, event._id.toString());
+        return Firebase.sendNotification(
+          user.deviceId,
+          event._id.toString(),
+          event.title,
+        );
       case 'email':
         return Email.sendEmail(user.email, 'Déclenchement');
       case 'phone':
