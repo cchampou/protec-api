@@ -31,6 +31,10 @@ app.get('/emails/:templateId', (req, res) => {
     url: 'test',
   });
 });
+app.get('/privacy-policy', (req, res) => {
+  res.render('privacyPolicy');
+});
+
 const PORT = 3000;
 
 (async () => {
