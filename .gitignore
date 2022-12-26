@@ -1,5 +1,6 @@
 firebase-key.json
 node_modules/
 dist/
+coverage/
 uploads/
 .env*

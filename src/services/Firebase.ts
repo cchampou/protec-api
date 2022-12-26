@@ -34,17 +34,25 @@ class Firebase {
     try {
       const response: MessagingDevicesResponse = await getMessaging(
         Firebase.app,
-      ).sendToDevice(token, {
-        notification: {
-          title: 'Déclenchement PC (test)',
-          body: eventName,
-          priority: 'high',
+      ).sendToDevice(
+        token,
+        {
+          notification: {
+            title: 'Déclenchement PC (test)',
+            body: eventName,
+            priority: 'high',
+          },
+          data: {
+            type: 'alert',
+            eventId,
+          },
         },
-        data: {
-          type: 'alert',
-          eventId,
+        {
+          fcmOptions: {
+            analyticsLabel: 'alert',
+          },
         },
-      });
+      );
       logMessagingDevicesResponse(response);
     } catch (error) {
       logger.error(error.code);

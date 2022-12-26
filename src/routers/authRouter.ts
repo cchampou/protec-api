@@ -1,10 +1,10 @@
 import logger from '../utils/logger';
 import User from '../entities/User';
 import Email from '../services/Email';
-import { sign } from 'jsonwebtoken';
 import { Router } from 'express';
 import { readFileSync } from 'fs';
 import { render } from 'ejs';
+import { generateJWT } from '../utils/jwt';
 
 const authRouter = Router();
 
@@ -37,6 +37,7 @@ authRouter.post('/recover', async (req, res) => {
   }
   res.send({ message: 'ok' });
 });
+
 authRouter.post('/reset', async (req, res) => {
   const { token, password } = req.body;
   logger.info('Resetting password for', token);
@@ -60,14 +61,9 @@ authRouter.post('/login', async (req, res) => {
   const user = await User.findOne({
     email,
   }).select('+hash +salt');
-  if (!user || !user.validPassword(password) || user.role !== 'admin')
+  if (!user || !user.validPassword(password) || !user.isAdmin())
     return res.status(401).send({ message: 'Email ou mot de passe incorrect' });
-  if (!process.env.JWT_SECRET) {
-    throw new Error('JWT_SECRET is not defined');
-  }
-  const token = sign({ id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: '1h',
-  });
+  const token = generateJWT(user._id.toString());
   return res.status(200).send({ token });
 });
 

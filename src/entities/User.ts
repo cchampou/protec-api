@@ -19,6 +19,7 @@ interface UserMethods {
   generateRecoveryToken: () => void;
   generateHashAndSalt: (password: string) => void;
   validPassword: (password: string) => boolean;
+  isAdmin(): boolean;
 }
 
 const userSchema = new Schema<UserInterface, {}, UserMethods>({
@@ -40,6 +41,10 @@ const userSchema = new Schema<UserInterface, {}, UserMethods>({
 
 userSchema.methods.generateRecoveryToken = function () {
   this.recoveryToken = randomBytes(20).toString('hex');
+};
+
+userSchema.methods.isAdmin = function () {
+  return this.role === 'admin';
 };
 
 userSchema.methods.generateHashAndSalt = function (password: string) {
