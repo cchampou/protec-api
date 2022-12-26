@@ -36,6 +36,19 @@ userRouter.post('/:id/invite', async (req, res) => {
   res.send(user);
 });
 
+userRouter.patch('/:userId', async (req, res) => {
+  const { userId } = req.params;
+  if (!userId) {
+    return res.status(400).send('Bad request');
+  }
+  const user = await User.findOne({ _id: userId });
+  if (!user) {
+    return res.status(404).send('User not found');
+  }
+  await User.updateOne({ _id: userId }, req.body);
+  return res.status(200).send(user);
+});
+
 userRouter.post('/import', upload.single('csv'), async (req, res) => {
   if (!req.file) {
     return res.status(400).send({ message: 'No file uploaded' });
