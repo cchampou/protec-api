@@ -1,8 +1,6 @@
 import { config } from 'dotenv';
 
-config({
-  path: '.env.dev',
-});
+config();
 
 import logger from './utils/logger';
 import * as express from 'express';
