@@ -24,9 +24,11 @@ userRouter.post('/:id/invite', async (req, res) => {
     return res.status(404).send('User not found');
   }
 
+  const templatePath = 'src/views/emails/invite.ejs';
   await Email.sendEmail(
     user.email,
-    render(readFileSync('src/views/emails/invite.ejs', 'utf8'), {
+    render(readFileSync(templatePath, 'utf8'), {
+      filename: templatePath,
       downloadLink:
         'https://play.google.com/apps/internaltest/4701694566417020121',
       registrationCode: user.registrationToken,
