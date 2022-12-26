@@ -3,7 +3,7 @@ import { JwtPayload, sign, verify } from 'jsonwebtoken';
 export const generateJWT = (userId: string) => {
   if (!process.env.JWT_SECRET) throw new Error('JWT_SECRET is not defined');
   return sign({ id: userId }, process.env.JWT_SECRET, {
-    expiresIn: '10m',
+    expiresIn: process.env.JWT_EXPIRATION ?? '1h',
   });
 };
 
