@@ -1,6 +1,5 @@
 import { generateJWT, verifyToken } from '../jwt';
 import { sign } from 'jsonwebtoken';
-import { expect } from '@jest/globals';
 
 describe('JWT', () => {
   beforeEach(() => {
