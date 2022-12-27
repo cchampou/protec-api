@@ -6,15 +6,18 @@ class Sms {
     if (!process.env.TWILIO_PHONE_NUMBER) {
       throw new Error('TWILIO_PHONE_NUMBER is not defined');
     }
-    const call = await Twilio.client.calls.create({
-      url: 'http://demo.twilio.com/docs/voice.xml',
-      to,
-      from: process.env.TWILIO_PHONE_NUMBER,
-    });
-    logger.info(
-      `Call sent with sid: ${call.sid} to ${to}, status: ${call.status}`,
-    );
-    return;
+    try {
+      const call = await Twilio.client.calls.create({
+        url: 'http://demo.twilio.com/docs/voice.xml',
+        to,
+        from: process.env.TWILIO_PHONE_NUMBER,
+      });
+      logger.info(
+        `Call sent with sid: ${call.sid} to ${to}, status: ${call.status}`,
+      );
+    } catch (error) {
+      logger.error(error);
+    }
   }
 }
 
