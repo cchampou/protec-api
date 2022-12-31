@@ -11,7 +11,10 @@ const isAuthenticated = async (
     if (!authorization) throw new Error('Authorization header is not defined');
     const token = authorization.split(' ')[1];
     if (!token) throw new Error('Token is not defined');
-    verifyToken(token);
+    const payload = verifyToken(token);
+    if (typeof payload !== 'string') {
+      req.userId = payload.id;
+    }
     return next();
   } catch (error) {
     return res.status(401).send(error);

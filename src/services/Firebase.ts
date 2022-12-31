@@ -30,34 +30,29 @@ class Firebase {
     token: string,
     eventId: string,
     eventName: string,
-  ) {
-    try {
-      const response: MessagingDevicesResponse = await getMessaging(
-        Firebase.app,
-      ).sendToDevice(
-        token,
-        {
-          notification: {
-            title: 'Déclenchement PC (test)',
-            body: eventName,
-            priority: 'high',
-          },
-          data: {
-            type: 'alert',
-            eventId,
-          },
+  ): Promise<void> {
+    const response: MessagingDevicesResponse = await getMessaging(
+      Firebase.app,
+    ).sendToDevice(
+      token,
+      {
+        notification: {
+          title: 'Déclenchement PC (test)',
+          body: eventName,
+          priority: 'high',
         },
-        {
-          fcmOptions: {
-            analyticsLabel: 'alert',
-          },
+        data: {
+          type: 'alert',
+          eventId,
         },
-      );
-      logMessagingDevicesResponse(response);
-    } catch (error) {
-      logger.error(error.code);
-      logger.error(error.message);
-    }
+      },
+      {
+        fcmOptions: {
+          analyticsLabel: 'alert',
+        },
+      },
+    );
+    logMessagingDevicesResponse(response);
   }
 }
 

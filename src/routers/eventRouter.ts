@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Request, Router } from 'express';
 import Event from '../entities/Event';
 import User, { UserInterface } from '../entities/User';
 import Notifier from '../services/Notifier';
@@ -7,23 +7,28 @@ import Notification, {
 } from '../entities/Notification';
 import { HydratedDocument } from 'mongoose';
 import isAuthenticated from '../middlewares/auth';
+import logger from '../utils/logger';
+import { addSelfAvailability } from '../utils/event';
 
 const eventRouter = Router();
 
 eventRouter.get('/', async (req, res) => {
   const events = await Event.find().sort({ start: -1 });
+  if (typeof req.userId !== 'string')
+    return res.status(401).send('Unauthorized');
+  const userId = req.userId;
 
-  res.send(events);
+  return res.send(events.map((event) => addSelfAvailability(event, userId)));
 });
 
-eventRouter.get('/:id', isAuthenticated, async (req, res) => {
+eventRouter.get('/:id', isAuthenticated, async (req: Request, res) => {
   try {
     const event = await Event.findOne({
       _id: req.params.id,
     }).populate('notifications.user');
     if (!event) throw new Error('Not found');
-
-    return res.send(event);
+    if (!req.userId) throw new Error('Unauthorized');
+    return res.send(addSelfAvailability(event, req.userId));
   } catch (error) {
     return res.status(404).send({ message: 'Not found' });
   }
@@ -84,21 +89,29 @@ eventRouter.post('/:id/notify/:mode', async (req, res) => {
   const users: HydratedDocument<UserInterface>[] = await User.find();
   const event = await Event.findOne({ _id: eventId }).populate('notifications');
   if (!event) return res.status(404).send({ message: 'Event not found' });
-  users.map(async (user) => {
-    const existingNotification = event.notifications.find(
-      (notification) => notification.user.toString() === user._id.toString(),
-    );
-    if (existingNotification) {
-      existingNotification[mode] = true;
-    } else {
-      const notification = await new Notification({
-        user,
-        [mode]: true,
-      });
-      event.notifications.push(notification);
-    }
-    notifier.notify(user, event);
-  });
+  await Promise.all(
+    users.map(async (user) => {
+      try {
+        await notifier.notify(user, event);
+      } catch (e) {
+        logger.error(e.message);
+        return;
+      }
+      const existingNotification = event.notifications.find(
+        (notification) => notification.user.toString() === user._id.toString(),
+      );
+      if (existingNotification) {
+        existingNotification[mode] = true;
+      } else {
+        const notification = await new Notification({
+          user,
+          [mode]: true,
+        });
+        event.notifications.push(notification);
+      }
+    }),
+  );
+  logger.info('All notifications sent, saving event');
   await event.save();
   res.send({ message: 'Notification sent' });
 });

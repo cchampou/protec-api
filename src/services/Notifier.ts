@@ -19,7 +19,16 @@ class Notifier {
     this.config = config;
   }
 
-  public notify(user: UserInterface, event: EventInterface) {
+  public async notify(
+    user: UserInterface,
+    event: EventInterface,
+  ): Promise<void> {
+    const existingNotification = event.notifications.find(
+      (notification) => notification.user.toString() === user._id.toString(),
+    );
+    if (existingNotification && existingNotification.available !== 'pending') {
+      throw new Error('Notification already sent');
+    }
     switch (this.config.mode) {
       case 'push':
         return Firebase.sendNotification(
@@ -32,7 +41,10 @@ class Notifier {
       case 'phone':
         return Phone.call(user.phone);
       case 'sms':
-        return Sms.sendSms(user.phone, 'Déclenchement');
+        return Sms.sendSms(
+          user.phone,
+          '[Protection Civile 69] URGENT Déclenchement - Recensement du personnel disponible. Consultez l’application. Ceci n’est pas une convocation.',
+        );
       default:
         return Email.sendEmail(user.email, 'Déclenchement');
     }
