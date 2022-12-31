@@ -47,8 +47,17 @@ userRouter.patch('/:userId', async (req, res) => {
   if (!user) {
     return res.status(404).send('User not found');
   }
-  await User.updateOne({ _id: userId }, req.body);
-  return res.status(200).send(user);
+  try {
+    await User.updateOne({ _id: userId }, req.body);
+    return res.status(200).send(user);
+  } catch (error) {
+    return res
+      .status(400)
+      .send({
+        message:
+          'Un utilisateur avec cet email ou ce numero de téléphone existe déjà.',
+      });
+  }
 });
 
 userRouter.post('/import', upload.single('csv'), async (req, res) => {
