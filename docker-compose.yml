@@ -3,5 +3,6 @@ services:
   web:
     container_name: protec-api
     build: .
+    restart: unless-stopped
     ports:
       - "4000:3000"
