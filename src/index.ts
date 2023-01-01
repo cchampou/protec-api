@@ -12,7 +12,6 @@ import * as bodyParser from 'body-parser';
 import apiRouter from './routers';
 
 const app = express();
-
 app.set('view engine', 'ejs');
 app.set('views', 'src/views');
 
@@ -20,6 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
+app.use('/static', express.static('src/static'));
 app.use('/api', apiRouter);
 app.get('/emails/:templateId', (req, res) => {
   const { templateId } = req.params;
