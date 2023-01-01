@@ -8,7 +8,7 @@ import Notification, {
 import { HydratedDocument } from 'mongoose';
 import isAuthenticated from '../middlewares/auth';
 import logger from '../utils/logger';
-import { addSelfAvailability } from '../utils/event';
+import { addSelfAvailability, addStatistics } from '../utils/event';
 
 const eventRouter = Router();
 
@@ -28,7 +28,9 @@ eventRouter.get('/:id', isAuthenticated, async (req: Request, res) => {
     }).populate('notifications.user');
     if (!event) throw new Error('Not found');
     if (!req.userId) throw new Error('Unauthorized');
-    return res.send(addSelfAvailability(event, req.userId));
+    const eventWithSelfAvailability = addSelfAvailability(event, req.userId);
+    const eventWithStats = addStatistics(eventWithSelfAvailability);
+    return res.send(eventWithStats);
   } catch (error) {
     return res.status(404).send({ message: 'Not found' });
   }
