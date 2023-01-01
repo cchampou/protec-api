@@ -14,6 +14,7 @@ class Sms {
       const call = await Twilio.client.calls.create({
         url,
         to,
+        method: 'GET',
         from: process.env.TWILIO_PHONE_NUMBER,
       });
       logger.info(
