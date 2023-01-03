@@ -19,12 +19,16 @@ class Email {
     }
   }
 
-  public static async sendEmail(toEmail: string, html: string) {
+  public static async sendEmail(
+    toEmail: string,
+    html: string,
+    subject?: string,
+  ): Promise<void> {
     await this.init();
     await this.instance.sendMail({
       to: toEmail,
       html,
-      subject: 'ProtecApp',
+      subject: subject ? subject : 'ProtecApp',
       from: '"ADPC69" <clement@champouillon.com>',
     });
     logger.info('Email sent');

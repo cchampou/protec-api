@@ -1,0 +1,25 @@
+<%- include('header', {title: 'Un déclenchement est en cours, nous avons besoin de savoir si vous êtes disponible' }) %>
+<ul>
+    <li>Titre : <%= event.title %></li>
+    <li>Lieu RDV : <%= event.location %></li>
+    <li>Début : <%= event.start %></li>
+    <li>Fin : <%= event.end %></li>
+    <li>Commentaires : <%= event.comment %></li>
+</ul>
+<p>
+    Merci de faire un retour dès que possible, via l’application ou en vous rendant sur e-protec.
+</p>
+<p style="text-align: center">
+    <a href="protecapp://deeplink/event/<%= event.id %>"
+       style="background-color: #f78222; padding: 8px; margin: 16px; display: inline-block; color: white; text-decoration: none;">Accès direct à
+        l'application</a>
+</p>
+<p>
+    <strong>Attention, ceci n’est pas une convocation.</strong>
+</p>
+<p>
+    Protection civile du Rhône - Service déclenchement
+</p>
+<i>Cet email est généré automatiquement. Veuillez vous rapprocher du responsable RH de votre antenne pour toute
+    assistance.</i>
+<%- include('footer') %>

@@ -27,6 +27,13 @@ app.get('/emails/:templateId', (req, res) => {
     downloadLink: 'test',
     registrationCode: 'test',
     url: 'test',
+    event: {
+      title: 'test',
+      location: 'Place Bellecour',
+      start: new Date(),
+      end: new Date(),
+      comment: 'Ce sera génial',
+    },
   });
 });
 app.get('/privacy-policy', (req, res) => {

@@ -37,8 +37,9 @@ class Firebase {
       token,
       {
         notification: {
-          title: 'Déclenchement PC (test)',
-          body: eventName,
+          title: 'URGENT - Déclenchement en cours',
+          body:
+            eventName + '\n\nDis-nous si tu es dispo pour ce déclenchement.',
           priority: 'high',
         },
         data: {

@@ -4,6 +4,8 @@ import Email from './Email';
 import { EventInterface } from '../entities/Event';
 import Sms from './Sms';
 import Phone from './Phone';
+import { render } from 'ejs';
+import { readFileSync } from 'fs';
 
 export type NotifierMode = 'email' | 'sms' | 'push' | 'phone';
 
@@ -36,8 +38,6 @@ class Notifier {
           event._id.toString(),
           event.title,
         );
-      case 'email':
-        return Email.sendEmail(user.email, 'Déclenchement');
       case 'phone':
         return Phone.call(user.phone);
       case 'sms':
@@ -45,8 +45,26 @@ class Notifier {
           user.phone,
           '[Protection Civile 69] URGENT Déclenchement - Recensement du personnel disponible. Consultez l’application. Ceci n’est pas une convocation.',
         );
-      default:
-        return Email.sendEmail(user.email, 'Déclenchement');
+      default: {
+        const templatePath = 'src/views/emails/alert.ejs';
+        const template = readFileSync(templatePath, 'utf8');
+        return Email.sendEmail(
+          user.email,
+          render(template, {
+            filename: templatePath,
+            event: {
+              ...event,
+              start: new Date(event.start).toLocaleString('fr-FR'),
+              end: new Date(event.end).toLocaleString('fr-FR'),
+              id: event._id.toString(),
+              comment: event.comment,
+              title: event.title,
+              location: event.location,
+            },
+          }),
+          `[Protection Civile] URGENT - Déclenchement - ${event.title}`,
+        );
+      }
     }
   }
 }
