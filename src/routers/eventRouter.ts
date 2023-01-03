@@ -91,13 +91,13 @@ eventRouter.post('/:id/notify/:mode', async (req, res) => {
   const users: HydratedDocument<UserInterface>[] = await User.find();
   const event = await Event.findOne({ _id: eventId }).populate('notifications');
   if (!event) return res.status(404).send({ message: 'Event not found' });
-  await Promise.all(
-    users.map(async (user) => {
+  const notified = await Promise.all(
+    users.map(async (user): Promise<boolean> => {
       try {
         await notifier.notify(user, event);
       } catch (e) {
         logger.error(e.message);
-        return;
+        return false;
       }
       const existingNotification = event.notifications.find(
         (notification) => notification.user.toString() === user._id.toString(),
@@ -111,11 +111,13 @@ eventRouter.post('/:id/notify/:mode', async (req, res) => {
         });
         event.notifications.push(notification);
       }
+      return true;
     }),
   );
+  const notifiedCount = notified.filter((n) => n).length;
   logger.info('All notifications sent, saving event');
   await event.save();
-  res.send({ message: 'Notification sent' });
+  res.send({ message: `${notifiedCount} secouristes ont été notifiés.` });
 });
 
 export default eventRouter;
