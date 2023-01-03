@@ -17,6 +17,12 @@ userRouter.get('/', async (req, res) => {
   res.send(users);
 });
 
+userRouter.post('/', async (req, res) => {
+  const user = await User.create(req.body);
+
+  res.send(user);
+});
+
 userRouter.post('/:id/invite', async (req, res) => {
   const user = await User.findOne({ _id: req.params.id });
 
@@ -51,12 +57,10 @@ userRouter.patch('/:userId', async (req, res) => {
     await User.updateOne({ _id: userId }, req.body);
     return res.status(200).send(user);
   } catch (error) {
-    return res
-      .status(400)
-      .send({
-        message:
-          'Un utilisateur avec cet email ou ce numero de téléphone existe déjà.',
-      });
+    return res.status(400).send({
+      message:
+        'Un utilisateur avec cet email ou ce numero de téléphone existe déjà.',
+    });
   }
 });
 
