@@ -43,7 +43,12 @@ app.get('/privacy-policy', (req, res) => {
 const PORT = 3000;
 
 (async () => {
-  await Database.connect();
+  try {
+    await Database.connect();
+    logger.info('Database connection established');
+  } catch (error) {
+    logger.error(error);
+  }
   app.listen(PORT, () => {
     logger.info('Server listening on port ' + PORT);
   });

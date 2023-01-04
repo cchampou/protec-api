@@ -45,6 +45,7 @@ class Notifier {
           user.phone,
           '[Protection Civile 69] URGENT Déclenchement - Recensement du personnel disponible. Consultez l’application. Ceci n’est pas une convocation.',
         );
+      //  default or email case
       default: {
         const templatePath = 'src/views/emails/alert.ejs';
         const template = readFileSync(templatePath, 'utf8');

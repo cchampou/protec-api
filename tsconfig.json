@@ -9,7 +9,8 @@
     "experimentalDecorators": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "allowSyntheticDefaultImports": true,
+    "alwaysStrict": true,
+    "allowSyntheticDefaultImports": true
   },
   "files": [
     "src/types/express.d.ts"
